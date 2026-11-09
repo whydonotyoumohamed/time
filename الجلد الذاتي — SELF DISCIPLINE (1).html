@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الجلد الذاتي | SELF DISCIPLINE</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#09090b',
+                        cardBg: '#121215',
+                        cardBorder: '#1f1f23',
+                        cardHover: '#18181b',
+                        primaryBlue: '#3b82f6',
+                        accentBlue: '#60a5fa',
+                        darkBlue: '#1d4ed8',
+                        alertRed: '#ef4444',
+                        darkRed: '#b91c1c',
+                        hoverRed: '#dc2626',
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts: Cairo -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900;1000&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+        }
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: #09090b;
+            color: #f4f4f5;
+            overflow-x: hidden;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #09090b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #27272a;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3f3f46;
+        }
+        .glow-red {
+            box-shadow: 0 0 20px rgba(239, 68, 68, 0.25);
+        }
+        .glow-blue {
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.25);
+        }
+        .glass-card {
+            background: rgba(18, 18, 21, 0.85);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .tab-section {
+            animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-darkBg text-zinc-100 min-h-screen flex flex-col justify-between pb-24 md:pb-6">
+
+    <!-- Global Toast System -->
+    <div id="toast-container" class="fixed top-5 left-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- App Header -->
+    <header class="bg-cardBg/90 backdrop-blur-md border-b border-cardBorder px-4 md:px-8 py-3.5 sticky top-0 z-40 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="w-11 h-11 rounded-2xl bg-red-600/10 border border-red-500/30 text-alertRed flex items-center justify-center font-black text-xl glow-red">
+                <i class="fa-solid fa-skull"></i>
+            </div>
+            <div>
+                <div class="flex items-center gap-2">
+                    <h1 class="font-black text-lg text-white tracking-wide">الجلد الذاتي</h1>
+                    <span class="bg-blue-500/10 text-accentBlue text-[10px] font-bold px-2 py-0.5 rounded-full border border-blue-500/20">PRO ULTRA</span>
+                </div>
+                <p class="text-[11px] text-zinc-400">حاسب نفسك اليوم قبل أن تحاسبك نتائج الغد</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <button onclick="openManualAddModal()" class="bg-blue-600/20 hover:bg-blue-600/30 text-accentBlue border border-blue-500/30 text-xs px-3 py-2 rounded-xl font-bold flex items-center gap-1.5 transition-all">
+                <i class="fa-solid fa-plus-circle"></i>
+                <span class="hidden sm:inline">إضافة ساعات مذاكرة نسيتها</span>
+            </button>
+            <button onclick="openConfrontationModal()" class="bg-alertRed hover:bg-hoverRed text-white text-xs px-4 py-2 rounded-xl font-extrabold flex items-center gap-2 glow-red transition-all transform active:scale-95">
+                <i class="fa-solid fa-bolt"></i>
+                <span class="hidden sm:inline">وضع المواجهة الحاد</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 max-w-6xl w-full mx-auto p-4 md:p-6 space-y-6">
+
+        <!-- 1. EXECUTIVE DASHBOARD -->
+        <section id="sec-dashboard" class="space-y-6 tab-section">
+            <!-- Daily Confrontation Banner -->
+            <div class="glass-card p-6 md:p-8 rounded-3xl relative overflow-hidden shadow-2xl border border-red-500/20 bg-gradient-to-r from-cardBg via-zinc-950 to-red-950/20">
+                <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-red-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6 relative z-10">
+                    <div class="space-y-2 max-w-3xl">
+                        <div class="flex items-center gap-2">
+                            <span class="inline-flex items-center gap-1.5 bg-red-500/10 text-alertRed text-xs font-bold px-3 py-1 rounded-full border border-red-500/20">
+                                <i class="fa-solid fa-fire text-xs"></i> الصدمة التحفيزية اليومية
+                            </span>
+                            <span id="dash-date-badge" class="text-xs text-zinc-400 font-semibold">--</span>
+                        </div>
+                        <h2 id="hero-quote-text" class="text-base md:text-xl font-black text-white leading-relaxed">
+                            «كل يوم يضيع لن يعود. ماذا فعلت اليوم لتقترب من مستقبلك؟»
+                        </h2>
+                    </div>
+                    <button onclick="rotateQuote()" class="bg-zinc-900 hover:bg-zinc-800 text-zinc-300 text-xs font-bold px-4 py-3 rounded-2xl transition-all border border-cardBorder flex items-center gap-2 whitespace-nowrap active:scale-95 shadow-md">
+                        <i class="fa-solid fa-shuffle text-accentBlue"></i> صدمة أخرى
+                    </button>
+                </div>
+            </div>
+
+            <!-- EXAM COUNTDOWN CARD DIRECTLY ON DASHBOARD -->
+            <div class="glass-card p-6 rounded-3xl border border-amber-500/30 bg-gradient-to-r from-zinc-950 via-cardBg to-amber-950/10 flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
+                <div class="flex items-center gap-4 w-full md:w-auto">
+                    <div class="w-14 h-14 rounded-2xl bg-amber-500/10 text-amber-500 border border-amber-500/30 flex items-center justify-center text-2xl flex-shrink-0">
+                        <i class="fa-solid fa-hourglass-start animate-pulse"></i>
+                    </div>
+                    <div>
+                        <span class="text-xs font-bold text-amber-400 uppercase tracking-wider">العداد التنازلي للامتحان القادم</span>
+                        <h3 id="dash-exam-title-text" class="text-lg font-black text-white">موعد الامتحان النهائي</h3>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-4 w-full md:w-auto justify-between md:justify-end">
+                    <div class="text-center md:text-right">
+                        <div id="dash-exam-days-big" class="text-4xl font-black text-amber-400 tracking-tight">--</div>
+                        <span class="text-xs text-zinc-400 font-bold">يوماً متبقياً لحسم المستقبل</span>
+                    </div>
+
+                    <!-- Quick Exam Date Editor Inline -->
+                    <div class="flex items-center gap-2 bg-zinc-950 border border-cardBorder p-2 rounded-2xl">
+                        <input type="date" id="dash-quick-exam-date" onchange="quickUpdateExamDate()" class="bg-transparent text-xs text-zinc-200 font-bold focus:outline-none cursor-pointer">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Core Key Metrics Grid -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <!-- Metric 1: Actual Studied -->
+                <div class="glass-card p-5 rounded-2xl border border-cardBorder flex flex-col justify-between hover:border-blue-500/30 transition-all">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-zinc-400">مذاكرة اليوم الفعلية</span>
+                        <div class="w-8 h-8 rounded-xl bg-blue-500/10 text-primaryBlue flex items-center justify-center text-sm">
+                            <i class="fa-solid fa-book-open"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-baseline gap-1.5">
+                        <span id="dash-today-hours" class="text-3xl font-black text-white">0.0</span>
+                        <span class="text-xs text-zinc-400">ساعة</span>
+                    </div>
+                    <div class="w-full bg-zinc-900 h-1.5 rounded-full mt-3 overflow-hidden">
+                        <div id="dash-today-bar" class="bg-primaryBlue h-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <!-- Metric 2: Automatic Procrastination Hours -->
+                <div class="glass-card p-5 rounded-2xl border border-cardBorder flex flex-col justify-between hover:border-red-500/30 transition-all">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-zinc-400">التسويف الأوتوماتيكي اليوم</span>
+                        <div class="w-8 h-8 rounded-xl bg-red-500/10 text-alertRed flex items-center justify-center text-sm">
+                            <i class="fa-solid fa-hourglass-half"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-baseline gap-1.5">
+                        <span id="dash-today-waste-hours" class="text-3xl font-black text-alertRed">0.0</span>
+                        <span class="text-xs text-zinc-400">ساعة ضائعة</span>
+                    </div>
+                    <span class="text-[10px] text-zinc-500 mt-3 flex items-center gap-1">
+                        (ساعات الفراغ المتاحة - ساعات المذاكرة)
+                    </span>
+                </div>
+
+                <!-- Metric 3: Score -->
+                <div class="glass-card p-5 rounded-2xl border border-cardBorder flex flex-col justify-between hover:border-emerald-500/30 transition-all">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-zinc-400">درجة الانضباط اليومي</span>
+                        <div class="w-8 h-8 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center text-sm">
+                            <i class="fa-solid fa-gauge-high"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-baseline gap-1.5">
+                        <span id="dash-discipline-score" class="text-3xl font-black text-emerald-400">0</span>
+                        <span class="text-xs text-zinc-400">/ 100</span>
+                    </div>
+                    <span id="dash-discipline-status" class="text-[11px] text-zinc-400 mt-3 font-semibold">يحتاج إلى تحسين</span>
+                </div>
+
+                <!-- Metric 4: Free Hours Goal -->
+                <div class="glass-card p-5 rounded-2xl border border-cardBorder flex flex-col justify-between hover:border-purple-500/30 transition-all">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold text-zinc-400">ساعات الفراغ المتاحة</span>
+                        <div class="w-8 h-8 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-sm">
+                            <i class="fa-solid fa-clock font-bold"></i>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex items-baseline gap-1.5">
+                        <span id="dash-free-hours-val" class="text-3xl font-black text-white">8</span>
+                        <span class="text-xs text-zinc-400">ساعات يومياً</span>
+                    </div>
+                    <span class="text-[11px] text-purple-400 mt-3 font-semibold">تعدل من الإعدادات</span>
+                </div>
+            </div>
+
+            <!-- Quick Action Hub -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <button onclick="switchTab('timer')" class="glass-card p-6 rounded-2xl text-right flex items-center justify-between group hover:border-primaryBlue/50 transition-all active:scale-[0.98]">
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2">
+                            <h3 class="font-bold text-white text-base group-hover:text-accentBlue transition-colors">مؤقت المذاكرة والتركيز</h3>
+                            <span class="bg-blue-500/20 text-accentBlue text-[10px] px-2 py-0.5 rounded-full font-bold">بدء جلسة</span>
+                        </div>
+                        <p class="text-xs text-zinc-400">ابدأ جلسةذاكرة فائقة التركيز مع أصوات المطر وتكات الساعة.</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-2xl bg-blue-600/10 text-primaryBlue group-hover:bg-primaryBlue group-hover:text-white flex items-center justify-center text-xl transition-all glow-blue">
+                        <i class="fa-solid fa-play"></i>
+                    </div>
+                </button>
+
+                <button onclick="switchTab('tasks')" class="glass-card p-6 rounded-2xl text-right flex items-center justify-between group hover:border-emerald-500/50 transition-all active:scale-[0.98]">
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2">
+                            <h3 class="font-bold text-white text-base group-hover:text-emerald-400 transition-colors">إدارة مهام الأسبوع</h3>
+                            <span id="dash-tasks-badge" class="bg-emerald-500/20 text-emerald-400 text-[10px] px-2 py-0.5 rounded-full font-bold">0 مكتملة</span>
+                        </div>
+                        <p class="text-xs text-zinc-400">مهام دراسية مكبرة وواضحة جداً سهلة الإضافة والتنفيذ.</p>
+                    </div>
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-600/10 text-emerald-400 group-hover:bg-emerald-500 group-hover:text-white flex items-center justify-center text-xl transition-all">
+                        <i class="fa-solid fa-check-double"></i>
+                    </div>
+                </button>
+            </div>
+        </section>
+
+        <!-- 2. TIMER & FOCUS SANCTUM -->
+        <section id="sec-timer" class="space-y-6 tab-section hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Main Timer Box -->
+                <div class="lg:col-span-2 glass-card p-8 rounded-3xl text-center flex flex-col items-center justify-center space-y-6 relative overflow-hidden border border-cardBorder">
+                    <div class="flex items-center gap-2 bg-zinc-900 border border-cardBorder px-4 py-1.5 rounded-full text-xs text-zinc-300">
+                        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                        محراب التركيز والمذاكرة الفعلية
+                    </div>
+
+                    <!-- Digital Display -->
+                    <div id="timer-display" class="text-6xl md:text-8xl font-black font-mono text-white tracking-widest my-4 drop-shadow-md">
+                        00:00:00
+                    </div>
+
+                    <!-- Ambient Sound Selector: ONLY RAIN & CLOCK TICKS -->
+                    <div class="w-full max-w-md bg-zinc-950 p-4 rounded-2xl border border-cardBorder space-y-3">
+                        <div class="flex items-center justify-between text-xs font-bold text-zinc-400">
+                            <span><i class="fa-solid fa-headphones text-accentBlue ml-1"></i> الأصوات المحفزة للتركيز:</span>
+                            <span id="ambient-status-text" class="text-zinc-500 font-normal">معطل</span>
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button onclick="toggleAmbientSound('rain')" id="btn-sound-rain" class="bg-zinc-900 hover:bg-zinc-800 text-xs py-3 px-4 rounded-xl border border-cardBorder text-zinc-300 font-bold transition-all flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-cloud-showers-heavy text-accentBlue"></i> صوت المطر
+                            </button>
+                            <button onclick="toggleAmbientSound('clock')" id="btn-sound-clock" class="bg-zinc-900 hover:bg-zinc-800 text-xs py-3 px-4 rounded-xl border border-cardBorder text-zinc-300 font-bold transition-all flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-clock text-amber-400"></i> تكات الساعة
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Action Controls -->
+                    <div class="flex items-center gap-4 pt-2">
+                        <button id="btn-timer-start" onclick="startTimer()" class="bg-primaryBlue hover:bg-blue-600 text-white font-extrabold text-base px-10 py-4 rounded-2xl transition-all shadow-xl glow-blue flex items-center gap-2 active:scale-95">
+                            <i class="fa-solid fa-play"></i> بدء المذاكرة الآن
+                        </button>
+                        <button id="btn-timer-pause" onclick="pauseTimer()" class="bg-zinc-800 hover:bg-zinc-700 text-white font-extrabold text-base px-8 py-4 rounded-2xl transition-all border border-cardBorder hidden active:scale-95">
+                            <i class="fa-solid fa-pause"></i> إيقاف مؤقت
+                        </button>
+                        <button id="btn-timer-finish" onclick="finishTimer()" class="bg-alertRed hover:bg-hoverRed text-white font-extrabold text-base px-8 py-4 rounded-2xl transition-all glow-red hidden active:scale-95">
+                            <i class="fa-solid fa-stop"></i> إنهاء وحفظ
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Session Stats -->
+                <div class="space-y-6">
+                    <div class="glass-card p-6 rounded-3xl border border-cardBorder space-y-4">
+                        <div class="flex items-center justify-between border-b border-cardBorder pb-3">
+                            <h3 class="font-bold text-white text-sm">إحصائيات جلسة اليوم</h3>
+                            <i class="fa-solid fa-chart-pie text-accentBlue"></i>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="text-zinc-400">جلسات اليوم:</span>
+                                <span id="timer-sessions-count" class="font-bold text-white">0 جلسة</span>
+                            </div>
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="text-zinc-400">إجمالي دقائق التركيز اليوم:</span>
+                                <span id="timer-total-today-mins" class="font-bold text-accentBlue">0 دقيقة</span>
+                            </div>
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="text-zinc-400">متوسط طول الجلسة:</span>
+                                <span id="timer-avg-session" class="font-bold text-white">0 دقيقة</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. VISUALLY CLEARER AND BIGGER TASK ENGINE -->
+        <section id="sec-tasks" class="space-y-6 tab-section hidden">
+            <!-- Add Task Form -->
+            <div class="glass-card p-6 rounded-3xl border border-cardBorder space-y-4 shadow-xl">
+                <h3 class="font-bold text-white text-lg flex items-center gap-2">
+                    <i class="fa-solid fa-circle-plus text-primaryBlue"></i> إضافة مهمة دراسية جديدة
+                </h3>
+                <form onsubmit="addTask(event)" class="flex flex-col sm:flex-row items-center gap-3">
+                    <input type="text" id="task-input-name" required placeholder="اكتب المهمة بوضوح..." class="w-full flex-1 bg-zinc-950 border border-cardBorder text-base text-zinc-100 font-bold rounded-2xl px-5 py-4 focus:outline-none focus:border-primaryBlue transition-all">
+                    <select id="task-input-priority" class="w-full sm:w-auto bg-zinc-950 border border-cardBorder text-sm text-zinc-100 font-bold rounded-2xl px-4 py-4 focus:outline-none focus:border-primaryBlue">
+                        <option value="سهلة">سهلة</option>
+                        <option value="متوسطة" selected>متوسطة</option>
+                        <option value="صعبة">صعبة</option>
+                    </select>
+                    <button type="submit" class="w-full sm:w-auto bg-primaryBlue hover:bg-blue-600 text-white font-black text-base px-8 py-4 rounded-2xl transition-all shadow-lg whitespace-nowrap active:scale-95">
+                        إضافة المهمة
+                    </button>
+                </form>
+            </div>
+
+            <!-- Task List Container -->
+            <div class="glass-card p-6 rounded-3xl border border-cardBorder space-y-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-cardBorder pb-4">
+                    <div>
+                        <h3 class="font-black text-white text-xl">مهام الأسبوع الحالية</h3>
+                        <p class="text-xs text-zinc-400 mt-1">بطاقات واضحة ومكبرة لتسهيل الإنجاز والمتابعة.</p>
+                    </div>
+                    <button onclick="resetWeeklyTasks()" class="bg-zinc-900 hover:bg-zinc-800 text-alertRed border border-red-500/30 text-xs font-extrabold px-4 py-3 rounded-2xl transition-all flex items-center gap-2 self-start sm:self-auto active:scale-95">
+                        <i class="fa-solid fa-arrows-rotate"></i> تجديد خطة الأسبوع
+                    </button>
+                </div>
+
+                <!-- Prominent, Larger Task Cards Stream -->
+                <div id="tasks-container" class="space-y-4">
+                    <!-- Rendered Dynamically with Larger Design -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. ANALYTICS & INTERACTIVE CHARTS -->
+        <section id="sec-stats" class="space-y-6 tab-section hidden">
+            <!-- Chart Card -->
+            <div class="glass-card p-6 rounded-3xl border border-cardBorder space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                        <h3 class="font-bold text-white text-base">مقارنة المذاكرة التراكمية والتسويف الأوتوماتيكي</h3>
+                        <p class="text-xs text-zinc-400 mt-1">رسم بياني تفاعلي يوضح ساعات المذاكرة وساعات التسويف التي تحسب أوتوماتيكياً.</p>
+                    </div>
+                </div>
+                <div class="h-80 w-full relative">
+                    <canvas id="mainAnalyticsChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Historical Metrics Breakdown -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="glass-card p-5 rounded-2xl border border-cardBorder">
+                    <span class="text-xs text-zinc-400 font-bold">إجمالي المذاكرة التراكمية</span>
+                    <h4 id="stats-total-hours" class="text-2xl font-black text-accentBlue mt-2">0.0 ساعة</h4>
+                </div>
+                <div class="glass-card p-5 rounded-2xl border border-cardBorder">
+                    <span class="text-xs text-zinc-400 font-bold">الأيام النشطة دراسياً</span>
+                    <h4 id="stats-active-days" class="text-2xl font-black text-white mt-2">0 يوم</h4>
+                </div>
+                <div class="glass-card p-5 rounded-2xl border border-cardBorder">
+                    <span class="text-xs text-zinc-400 font-bold">نسبة إنجاز المهام الأسبوعية</span>
+                    <h4 id="stats-tasks-completion-rate" class="text-2xl font-black text-emerald-400 mt-2">0%</h4>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. ARCHIVE -->
+        <section id="sec-archive" class="space-y-6 tab-section hidden">
+            <div class="glass-card p-6 rounded-3xl border border-cardBorder space-y-4">
+                <h3 class="font-bold text-white text-base flex items-center gap-2">
+                    <i class="fa-solid fa-box-archive text-primaryBlue"></i> أرشيف الجلسات والبيانات التراكمية
+                </h3>
+                <div id="archive-list-container" class="space-y-3 pt-2">
+                    <!-- Rendered Dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. SETTINGS & CONFIGURATION -->
+        <section id="sec-settings" class="space-y-6 tab-section hidden">
+            <div class="glass-card p-6 rounded-3xl border border-cardBorder space-y-6">
+                <h3 class="font-bold text-white text-base border-b border-cardBorder pb-3">الإعدادات وحساب التسويف التلقائي</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs text-zinc-300 font-bold mb-2">اسم الطالب / المستهدف:</label>
+                        <input type="text" id="setting-user-name" class="w-full bg-zinc-950 border border-cardBorder text-sm text-zinc-100 rounded-2xl px-4 py-3 focus:outline-none focus:border-primaryBlue">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-zinc-300 font-bold mb-2">اسم الامتحان القادم:</label>
+                        <input type="text" id="setting-exam-title" class="w-full bg-zinc-950 border border-cardBorder text-sm text-zinc-100 rounded-2xl px-4 py-3 focus:outline-none focus:border-primaryBlue">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-zinc-300 font-bold mb-2">متوسط ساعات الفراغ المتاحة يومياً (لحساب التسويف):</label>
+                        <input type="number" id="setting-free-hours" min="1" max="24" class="w-full bg-zinc-950 border border-cardBorder text-sm text-zinc-100 rounded-2xl px-4 py-3 focus:outline-none focus:border-primaryBlue">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-zinc-300 font-bold mb-2">هدف ساعات المذاكرة اليومي:</label>
+                        <input type="number" id="setting-daily-goal" min="1" max="18" class="w-full bg-zinc-950 border border-cardBorder text-sm text-zinc-100 rounded-2xl px-4 py-3 focus:outline-none focus:border-primaryBlue">
+                    </div>
+                    <div>
+                        <label class="block text-xs text-zinc-300 font-bold mb-2">تاريخ الامتحان القادم:</label>
+                        <input type="date" id="setting-exam-date" class="w-full bg-zinc-950 border border-cardBorder text-sm text-zinc-100 rounded-2xl px-4 py-3 focus:outline-none focus:border-primaryBlue">
+                    </div>
+                </div>
+
+                <div class="pt-6 border-t border-cardBorder space-y-4">
+                    <h4 class="text-xs font-bold text-zinc-300">النسخ الاحتياطي وإدارة البيانات:</h4>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <button onclick="exportBackupJSON()" class="bg-zinc-900 hover:bg-zinc-800 text-accentBlue border border-blue-500/30 text-xs font-bold px-5 py-3 rounded-2xl transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-download"></i> تصدير نسخة احتياطية (JSON)
+                        </button>
+                        <button onclick="wipeAllData()" class="bg-red-500/10 hover:bg-red-500/20 text-alertRed border border-red-500/30 text-xs font-bold px-5 py-3 rounded-2xl transition-all flex items-center gap-2">
+                            <i class="fa-solid fa-trash-can"></i> تصفير شامل وحذف كافة البيانات
+                        </button>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-cardBorder flex justify-end">
+                    <button onclick="saveSettings()" class="bg-primaryBlue hover:bg-blue-600 text-white font-extrabold text-sm px-8 py-3.5 rounded-2xl transition-all shadow-lg glow-blue active:scale-95">
+                        حفظ التعديلات
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Navigation Bar -->
+    <nav class="fixed bottom-0 left-0 right-0 z-40 bg-cardBg/95 backdrop-blur-md border-t border-cardBorder px-2 py-2">
+        <div class="max-w-md mx-auto flex items-center justify-around">
+            <button onclick="switchTab('dashboard')" class="nav-tab-btn flex flex-col items-center gap-1 text-primaryBlue font-bold" data-target="dashboard">
+                <i class="fa-solid fa-house text-lg"></i>
+                <span class="text-[10px]">الرئيسية</span>
+            </button>
+            <button onclick="switchTab('timer')" class="nav-tab-btn flex flex-col items-center gap-1 text-zinc-400 hover:text-white" data-target="timer">
+                <i class="fa-solid fa-stopwatch text-lg"></i>
+                <span class="text-[10px]">المؤقت</span>
+            </button>
+            <button onclick="switchTab('tasks')" class="nav-tab-btn flex flex-col items-center gap-1 text-zinc-400 hover:text-white" data-target="tasks">
+                <i class="fa-solid fa-list-check text-lg"></i>
+                <span class="text-[10px]">المهام</span>
+            </button>
+            <button onclick="switchTab('stats')" class="nav-tab-btn flex flex-col items-center gap-1 text-zinc-400 hover:text-white" data-target="stats">
+                <i class="fa-solid fa-chart-line text-lg"></i>
+                <span class="text-[10px]">الإحصائيات</span>
+            </button>
+            <button onclick="switchTab('settings')" class="nav-tab-btn flex flex-col items-center gap-1 text-zinc-400 hover:text-white" data-target="settings">
+                <i class="fa-solid fa-gear text-lg"></i>
+                <span class="text-[10px]">الإعدادات</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Modal: Add Forgotten Past Study Hours -->
+    <div id="manual-study-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4">
+        <div class="glass-card border border-blue-500/40 max-w-md w-full rounded-3xl p-6 shadow-2xl glow-blue space-y-5 relative">
+            <div class="flex items-center justify-between border-b border-cardBorder pb-3">
+                <h3 class="font-black text-white text-base flex items-center gap-2">
+                    <i class="fa-solid fa-plus-circle text-accentBlue"></i> إضافة ساعات مذاكرة فائتة
+                </h3>
+                <button onclick="closeManualAddModal()" class="text-zinc-500 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form onsubmit="saveManualStudyHours(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-zinc-300 mb-1.5">عدد ساعات المذاكرة التي نسيت تسجيلها:</label>
+                    <input type="number" id="manual-hours-input" step="0.5" min="0.5" max="15" required placeholder="مثال: 2" class="w-full bg-zinc-950 border border-cardBorder text-sm text-zinc-100 rounded-2xl px-4 py-3 focus:outline-none focus:border-primaryBlue">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-zinc-300 mb-1.5">التاريخ:</label>
+                    <input type="date" id="manual-date-input" required class="w-full bg-zinc-950 border border-cardBorder text-sm text-zinc-100 rounded-2xl px-4 py-3 focus:outline-none focus:border-primaryBlue">
+                </div>
+                <button type="submit" class="w-full bg-primaryBlue hover:bg-blue-600 text-white font-black text-sm py-3.5 rounded-2xl transition-all shadow-lg glow-blue active:scale-95">
+                    إضافة الساعات المسجلة
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Confrontation Mode -->
+    <div id="confrontation-modal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden items-center justify-center p-4">
+        <div class="glass-card border border-alertRed/50 max-w-md w-full rounded-3xl p-6 shadow-2xl glow-red space-y-6 text-center relative overflow-hidden">
+            <div class="w-16 h-16 rounded-full bg-red-600/20 text-alertRed flex items-center justify-center text-3xl mx-auto border border-red-500/30">
+                <i class="fa-solid fa-bolt"></i>
+            </div>
+            <div class="space-y-2">
+                <h3 class="font-black text-white text-xl">وضع المواجهة الحاد</h3>
+                <p id="modal-quote-text" class="text-xs text-red-300 bg-zinc-950 p-4 rounded-2xl border border-red-500/20 leading-relaxed font-bold">
+                    «الوقت الذي تهدره لن يعود أبداً. ماذا تفعل الآن لتنقذ مستقبلك؟»
+                </p>
+            </div>
+            <div class="flex items-center gap-3 pt-2">
+                <button onclick="closeConfrontationModal(); switchTab('timer'); startTimer();" class="flex-1 bg-primaryBlue hover:bg-blue-600 text-white font-extrabold py-3.5 rounded-2xl text-xs shadow-lg active:scale-95">
+                    ابدأ المذاكرة فوراً
+                </button>
+                <button onclick="closeConfrontationModal()" class="bg-zinc-900 hover:bg-zinc-800 text-zinc-300 font-bold py-3.5 px-5 rounded-2xl text-xs border border-cardBorder">
+                    إغلاق
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN JAVASCRIPT APPLICATION CORE -->
+    <script>
+        const CONFRONTATION_QUOTES = [
+            "«كل يوم يضيع لن يعود. ماذا فعلت اليوم لتقترب من مستقبلك؟»",
+            "«أهدافك أكبر بكثير من أعذارك الكسولة.»",
+            "«لا تنتظر الحماس؛ الحماس يأتي بعد أن تبدأ بالعمل فعلياً.»",
+            "«النجاح ليس مصادفة، بل هو نتاج قسوة الجلد الذاتي والانضباط.»",
+            "«تعب اليوم سيصبح وسام افتخار غداً، فلا تستسلم للكسل.»",
+            "«أنت تعرف جيداً ما عليك فعله، فلماذا تختار التأجيل؟»",
+            "«المرارة من الفشل أشد بمليون مرة من ألم الانضباط اليومي.»",
+            "«النوم والراحة لن يطورا مستقبلك، القسوة على النفس هي الحل.»",
+            "«الوقت لا ينتظرك، والامتحان يسطّر واقعك دون رحمة.»",
+            "«حاسب نفسك على كل دقيقة ضائعة في الهواتف والتفاهات.»",
+            "«توقف عن لعب دور الضحية، ابدأ المذاكرة الآن.»",
+            "«العقل القوي هو الذي يجبر صاحبه على العمل حين يكره ذلك.»",
+            "«مستقبلك يُبنى الآن، في هذه اللحظة بالذات، وليس غداً.»",
+            "«أعذارك لا تهتم بها النتيجة النهائية.»",
+            "«كل ساعة تسويف تسرق منك درجتك في الامتحان.»",
+            "«لا يوجد خيار ثالث: إما الانضباط الصارم، أو الندم الأبدي.»",
+            "«الفاشلون ينتظرون الظروف المثالية، الناجحون يصنعونها.»",
+            "«اجعل الخوف من الفشل وقوداً لمذاكرتك.»",
+            "«إذا لم تقاتل من أجل حلمك اليوم، فلا تبكِ على فقدانه غداً.»",
+            "«صُنع المستقبل يتطلب التضحية بالراحة المؤقتة.»",
+            "«ساعات النوم الزائدة لن تمنحك الشهادة التي تطمح إليها.»",
+            "«التسويف هو الفخ الذي يقع فيه الضعفاء فقط.»",
+            "«لا تخدع نفسك بمظهر المشغولية، العبرة بالإنجاز الفعلي.»",
+            "«احرم نفسك اليوم من التسلية لتتمتع بالنجاح غداً.»",
+            "«كل خفقة قلب تُقرّبك من الامتحان، فماذا أعددت له؟»",
+            "«تركيز ساعة واحدة بصدق خير من عشر ساعات مشتتة.»",
+            "«انظر في المرآة: هذا هو الشخص الوحيد المسؤول عن مستقبلك.»",
+            "«لا تتوقع نتائج عاتية بأفعال كسولة.»",
+            "«حين تشعر بالرغبة في الاستسلام، تذكر لماذا بدأت.»",
+            "«الانضباط هو الجسر بين الأهداف والإنجازات.»",
+            "«اقطع كل المشتتات فوراً، لا رحمة مع التسويف.»",
+            "«اجعل كتابك هو صديقك الوحيد في هذه المرحلة.»",
+            "«الشغف كذبة، الالتزام اليومي هو الحقيقة الوحيدة.»",
+            "«الندم على الفرص المفقودة أشد أطوار الألم الإنساني.»",
+            "«ارفع سقف توقعاتك من نفسك ولا ترضَ بالقليل.»",
+            "«من طلب العلا سهر الليالي وجلد ذاته بالعمل.»",
+            "«التحدي الحقيقي هو أن تعمل حين لا تكون لديك رغبة بالعمل.»",
+            "«استثمر ساعات يومك بدقة متناهية.»",
+            "«لا تسمح للهاتف الذكي أن يجعل مستقبلك غبياً.»",
+            "«الثمن الذي تدفعه في الانضباط زهيد جداً مقارنة بثمن الفشل.»",
+            "«كل درس تتكاسل عنه اليوم سيكون عائقاً أمامك في الامتحان.»",
+            "«كن صارماً مع نفسك، لطيفاً في نتيجتك.»",
+            "«إرادتك هي سلاحك الوحيد، فلا تفقد حادّيتها.»",
+            "«الراحة الحقيقية تأتي بعد تحقيق الأهداف فقط.»",
+            "«لا تؤجل عمل اليوم إلى الغد، فالغد لديه أهدافه الخاصة.»",
+            "«اصنع تاريخك الخاص بيدك وعرقك.»",
+            "«المنافسون يدرسون الآن، فماذا تفعل أنت؟»",
+            "«لا مكان للضعفاء في ساحة الانضباط.»",
+            "«العظمة تتطلب التضحية باللحظة الحالية.»",
+            "«أنت قادر على انجاز المنهج إن بدأت بصدق الآن!»"
+        ];
+
+        const DEFAULT_STATE = {
+            settings: {
+                userName: 'طالب مجتهد',
+                examTitle: 'موعد الامتحان النهائي',
+                dailyGoalHours: 5,
+                freeHours: 8, // Free available daily hours for auto-procrastination math
+                examDate: '2026-06-15'
+            },
+            tasks: [],
+            studyHistory: {} // Format: { 'YYYY-MM-DD': { studyMins: 0, sessions: 0 } }
+        };
+
+        let appState = JSON.parse(localStorage.getItem('self_discipline_ultra_v4')) || DEFAULT_STATE;
+
+        function saveState() {
+            localStorage.setItem('self_discipline_ultra_v4', JSON.stringify(appState));
+        }
+
+        function showToast(msg, isError = false) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `pointer-events-auto px-4 py-3 rounded-2xl text-xs font-extrabold text-white shadow-2xl transition-all border flex items-center gap-2 ${
+                isError ? 'bg-zinc-950 border-red-500/40 text-alertRed glow-red' : 'bg-zinc-950 border-blue-500/40 text-accentBlue glow-blue'
+            }`;
+            toast.innerHTML = `<i class="fa-solid ${isError ? 'fa-circle-exclamation' : 'fa-circle-check'}"></i> ${msg}`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(-10px)';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-section').forEach(sec => sec.classList.add('hidden'));
+            document.getElementById(`sec-${tabId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-tab-btn').forEach(btn => {
+                btn.className = "nav-tab-btn flex flex-col items-center gap-1 text-zinc-400 hover:text-white";
+            });
+            const activeBtn = document.querySelector(`.nav-tab-btn[data-target="${tabId}"]`);
+            if (activeBtn) {
+                activeBtn.className = "nav-tab-btn flex flex-col items-center gap-1 text-primaryBlue font-bold";
+            }
+
+            if (tabId === 'dashboard') renderDashboard();
+            if (tabId === 'timer') renderTimerView();
+            if (tabId === 'tasks') renderTasks();
+            if (tabId === 'stats') renderStats();
+            if (tabId === 'archive') renderArchiveView();
+            if (tabId === 'settings') renderSettings();
+        }
+
+        function rotateQuote() {
+            const randomQuote = CONFRONTATION_QUOTES[Math.floor(Math.random() * CONFRONTATION_QUOTES.length)];
+            document.getElementById('hero-quote-text').innerText = randomQuote;
+        }
+
+        // --- DASHBOARD RENDERER ---
+        function renderDashboard() {
+            const todayStr = new Date().toISOString().split('T')[0];
+            const todayData = appState.studyHistory[todayStr] || { studyMins: 0 };
+
+            const todayHours = (todayData.studyMins / 60);
+            document.getElementById('dash-today-hours').innerText = todayHours.toFixed(1);
+
+            // AUTOMATIC PROCRASTINATION CALCULATION: Free Hours - Actual Studied Hours
+            const freeHours = appState.settings.freeHours || 8;
+            const wasteHours = Math.max(0, freeHours - todayHours);
+            document.getElementById('dash-today-waste-hours').innerText = wasteHours.toFixed(1);
+            document.getElementById('dash-free-hours-val').innerText = freeHours;
+
+            const goal = appState.settings.dailyGoalHours || 5;
+            const progressPct = Math.min(100, Math.round((todayHours / goal) * 100));
+            document.getElementById('dash-today-bar').style.width = `${progressPct}%`;
+
+            // Discipline Score
+            const score = calculateDisciplineScore(todayStr);
+            document.getElementById('dash-discipline-score').innerText = score;
+
+            const statusEl = document.getElementById('dash-discipline-status');
+            if (score >= 90) { statusEl.innerText = "انضباط ممتاز 🔥"; statusEl.className = "text-[11px] text-emerald-400 font-bold mt-3"; }
+            else if (score >= 70) { statusEl.innerText = "أداء جيد جدًا 👍"; statusEl.className = "text-[11px] text-blue-400 font-bold mt-3"; }
+            else if (score >= 50) { statusEl.innerText = "يحتاج تحسين ⚠️"; statusEl.className = "text-[11px] text-amber-400 font-bold mt-3"; }
+            else { statusEl.innerText = "تقصير واضح ❌"; statusEl.className = "text-[11px] text-alertRed font-bold mt-3"; }
+
+            // EXAM COUNTDOWN ON DASHBOARD
+            document.getElementById('dash-exam-title-text').innerText = appState.settings.examTitle || 'موعد الامتحان النهائي';
+            document.getElementById('dash-quick-exam-date').value = appState.settings.examDate;
+
+            const examDate = new Date(appState.settings.examDate);
+            const today = new Date();
+            const diffDays = Math.max(0, Math.ceil((examDate - today) / (1000 * 60 * 60 * 24)));
+            document.getElementById('dash-exam-days-big').innerText = diffDays;
+
+            document.getElementById('dash-date-badge').innerText = new Date().toLocaleDateString('ar-EG', { weekday: 'long', day: 'numeric', month: 'short' });
+
+            const completedTasks = appState.tasks.filter(t => t.completed).length;
+            document.getElementById('dash-tasks-badge').innerText = `${completedTasks} مكتملة`;
+        }
+
+        function quickUpdateExamDate() {
+            const newDate = document.getElementById('dash-quick-exam-date').value;
+            if (newDate) {
+                appState.settings.examDate = newDate;
+                saveState();
+                renderDashboard();
+                showToast('تم تحديث موعد الامتحان القادم بنجاح 🎯');
+            }
+        }
+
+        function calculateDisciplineScore(dateStr) {
+            const data = appState.studyHistory[dateStr] || { studyMins: 0 };
+            const goalMins = (appState.settings.dailyGoalHours || 5) * 60;
+            const freeHours = appState.settings.freeHours || 8;
+            const studyHours = data.studyMins / 60;
+
+            const studyScore = Math.min(30, (data.studyMins / goalMins) * 30);
+            const totalTasks = appState.tasks.length;
+            const completedTasks = appState.tasks.filter(t => t.completed).length;
+            const taskScore = totalTasks > 0 ? (completedTasks / totalTasks) * 25 : 25;
+            const goalScore = data.studyMins >= goalMins ? 20 : (data.studyMins / goalMins) * 20;
+            const focusScore = data.sessions > 0 ? 15 : 0;
+
+            const wasteHours = Math.max(0, freeHours - studyHours);
+            const antiWasteScore = Math.max(0, 10 - (wasteHours * 1.5));
+
+            return Math.round(studyScore + taskScore + goalScore + focusScore + antiWasteScore);
+        }
+
+        // --- TIMER & WEB AUDIO SOUND GENERATOR (RAIN & CLOCK TICKING ONLY) ---
+        let timerInterval = null;
+        let secondsElapsed = 0;
+        let isTimerRunning = false;
+        let audioCtx = null;
+        let activeSoundType = null;
+        let activeAudioNodes = [];
+
+        function updateTimerDisplay() {
+            const hrs = String(Math.floor(secondsElapsed / 3600)).padStart(2, '0');
+            const mins = String(Math.floor((secondsElapsed % 3600) / 60)).padStart(2, '0');
+            const secs = String(secondsElapsed % 60).padStart(2, '0');
+            document.getElementById('timer-display').innerText = `${hrs}:${mins}:${secs}`;
+        }
+
+        function startTimer() {
+            if (isTimerRunning) return;
+            isTimerRunning = true;
+            document.getElementById('btn-timer-start').classList.add('hidden');
+            document.getElementById('btn-timer-pause').classList.remove('hidden');
+            document.getElementById('btn-timer-finish').classList.remove('hidden');
+
+            timerInterval = setInterval(() => {
+                secondsElapsed++;
+                updateTimerDisplay();
+            }, 1000);
+        }
+
+        function pauseTimer() {
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+            document.getElementById('btn-timer-start').classList.remove('hidden');
+            document.getElementById('btn-timer-pause').classList.add('hidden');
+            stopAmbientAudio();
+        }
+
+        function finishTimer() {
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+            stopAmbientAudio();
+
+            const minutesEarned = Math.round(secondsElapsed / 60);
+            if (minutesEarned > 0) {
+                const todayStr = new Date().toISOString().split('T')[0];
+                if (!appState.studyHistory[todayStr]) {
+                    appState.studyHistory[todayStr] = { studyMins: 0, sessions: 0 };
+                }
+                appState.studyHistory[todayStr].studyMins += minutesEarned;
+                appState.studyHistory[todayStr].sessions += 1;
+                saveState();
+                showToast(`عاش! تم تسجيل ${minutesEarned} دقيقة مذاكرة بنجاح 🎉`);
+            } else {
+                showToast('الجلسة قصيرة جداً لتسجيلها.', true);
+            }
+
+            secondsElapsed = 0;
+            updateTimerDisplay();
+            document.getElementById('btn-timer-start').classList.remove('hidden');
+            document.getElementById('btn-timer-pause').classList.add('hidden');
+            document.getElementById('btn-timer-finish').classList.add('hidden');
+            renderTimerView();
+        }
+
+        function renderTimerView() {
+            const todayStr = new Date().toISOString().split('T')[0];
+            const todayData = appState.studyHistory[todayStr] || { studyMins: 0, sessions: 0 };
+            document.getElementById('timer-sessions-count').innerText = `${todayData.sessions || 0} جلسات`;
+            document.getElementById('timer-total-today-mins').innerText = `${todayData.studyMins || 0} دقيقة`;
+            
+            const avg = (todayData.sessions || 0) > 0 ? Math.round(todayData.studyMins / todayData.sessions) : 0;
+            document.getElementById('timer-avg-session').innerText = `${avg} دقيقة`;
+        }
+
+        // ONLY RAIN & CLOCK TICKS SOUND GENERATOR
+        function toggleAmbientSound(type) {
+            if (activeSoundType === type) {
+                stopAmbientAudio();
+                return;
+            }
+            stopAmbientAudio();
+            activeSoundType = type;
+
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            
+            if (type === 'rain') {
+                const bufferSize = audioCtx.sampleRate * 2;
+                const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const output = buffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    output[i] = Math.random() * 2 - 1;
+                }
+
+                const whiteNoise = audioCtx.createBufferSource();
+                whiteNoise.buffer = buffer;
+                whiteNoise.loop = true;
+
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'lowpass';
+                filter.frequency.value = 800;
+
+                const gainNode = audioCtx.createGain();
+                gainNode.gain.value = 0.15;
+
+                whiteNoise.connect(filter);
+                filter.connect(gainNode);
+                gainNode.connect(audioCtx.destination);
+
+                whiteNoise.start();
+                activeAudioNodes.push(whiteNoise);
+                document.getElementById('ambient-status-text').innerText = 'يعمل: صوت المطر';
+            } else if (type === 'clock') {
+                const tickInterval = setInterval(() => {
+                    if (activeSoundType !== 'clock') {
+                        clearInterval(tickInterval);
+                        return;
+                    }
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(1000, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.04);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.04);
+                }, 1000);
+                document.getElementById('ambient-status-text').innerText = 'يعمل: تكات الساعة';
+            }
+
+            showToast(`تم تشغيل الصوت: ${type === 'rain' ? 'صوت المطر' : 'تكات الساعة'}`);
+        }
+
+        function stopAmbientAudio() {
+            activeAudioNodes.forEach(node => {
+                try { node.stop(); } catch(e){}
+            });
+            activeAudioNodes = [];
+            activeSoundType = null;
+            document.getElementById('ambient-status-text').innerText = 'معطل';
+        }
+
+        // --- VISUALLY CLEARER AND BIGGER TASK CARDS ENGINE ---
+        function addTask(e) {
+            e.preventDefault();
+            const nameInput = document.getElementById('task-input-name');
+            const priorityInput = document.getElementById('task-input-priority');
+
+            const newTask = {
+                id: Date.now(),
+                name: nameInput.value.trim(),
+                priority: priorityInput.value,
+                completed: false
+            };
+
+            appState.tasks.push(newTask);
+            saveState();
+            nameInput.value = '';
+            renderTasks();
+            showToast('تمت إضافة المهمة بنجاح');
+        }
+
+        function toggleTask(id) {
+            appState.tasks = appState.tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
+            saveState();
+            renderTasks();
+        }
+
+        function deleteTask(id) {
+            appState.tasks = appState.tasks.filter(t => t.id !== id);
+            saveState();
+            renderTasks();
+            showToast('تم حذف المهمة');
+        }
+
+        function resetWeeklyTasks() {
+            if (appState.tasks.length === 0) {
+                showToast('قائمة المهام فارغة بالفعل.', true);
+                return;
+            }
+            appState.tasks = [];
+            saveState();
+            renderTasks();
+            showToast('تم تجديد خطة الأسبوع وتصفير المهام بنجاح!');
+        }
+
+        function renderTasks() {
+            const container = document.getElementById('tasks-container');
+            if (appState.tasks.length === 0) {
+                container.innerHTML = `<div class="text-center py-10 text-zinc-500 text-sm font-bold">لا توجد مهام حالية للأسبوع. أضف مهمتك المكبرة الأولى أعلاه.</div>`;
+                return;
+            }
+
+            container.innerHTML = appState.tasks.map(t => `
+                <div class="flex items-center justify-between p-5 bg-zinc-950 border-2 ${t.completed ? 'border-cardBorder opacity-50' : 'border-cardBorder hover:border-primaryBlue/40'} rounded-2xl transition-all shadow-md">
+                    <div class="flex items-center gap-4 flex-1">
+                        <input type="checkbox" ${t.completed ? 'checked' : ''} onchange="toggleTask(${t.id})" class="w-6 h-6 rounded-lg text-primaryBlue focus:ring-0 cursor-pointer">
+                        <span class="text-base font-extrabold ${t.completed ? 'line-through text-zinc-500' : 'text-white'}">${t.name}</span>
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <span class="text-xs px-4 py-1.5 rounded-xl font-black ${
+                            t.priority === 'صعبة' ? 'bg-red-500/10 text-alertRed border border-red-500/30 glow-red' :
+                            t.priority === 'متوسطة' ? 'bg-blue-500/10 text-accentBlue border border-blue-500/30' :
+                            'bg-zinc-800 text-zinc-400'
+                        }">${t.priority}</span>
+                        <button onclick="deleteTask(${t.id})" class="text-zinc-500 hover:text-alertRed transition-colors text-lg p-2">
+                            <i class="fa-solid fa-trash-can"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- MANUAL FORGOTTEN PAST STUDY HOURS MODAL ---
+        function openManualAddModal() {
+            document.getElementById('manual-date-input').value = new Date().toISOString().split('T')[0];
+            document.getElementById('manual-study-modal').classList.remove('hidden');
+            document.getElementById('manual-study-modal').classList.add('flex');
+        }
+        function closeManualAddModal() {
+            document.getElementById('manual-study-modal').classList.add('hidden');
+            document.getElementById('manual-study-modal').classList.remove('flex');
+        }
+
+        function saveManualStudyHours(e) {
+            e.preventDefault();
+            const hours = parseFloat(document.getElementById('manual-hours-input').value);
+            const dateStr = document.getElementById('manual-date-input').value;
+
+            if (!hours || hours <= 0 || !dateStr) return;
+
+            const mins = Math.round(hours * 60);
+            if (!appState.studyHistory[dateStr]) {
+                appState.studyHistory[dateStr] = { studyMins: 0, sessions: 0 };
+            }
+            appState.studyHistory[dateStr].studyMins += mins;
+            appState.studyHistory[dateStr].sessions += 1;
+            saveState();
+
+            closeManualAddModal();
+            showToast(`تمت إضافة ${hours} ساعة مذاكرة لتاريخ ${dateStr} بنجاح 🎉`);
+            renderDashboard();
+        }
+
+        // --- CHART & STATS ---
+        let mainChartInstance = null;
+
+        function renderStats() {
+            let totalStudyMins = 0;
+            let activeDays = 0;
+
+            for (const data of Object.values(appState.studyHistory)) {
+                if (data.studyMins > 0) {
+                    totalStudyMins += data.studyMins;
+                    activeDays++;
+                }
+            }
+
+            document.getElementById('stats-total-hours').innerText = `${(totalStudyMins / 60).toFixed(1)} ساعة`;
+            document.getElementById('stats-active-days').innerText = `${activeDays} يوم`;
+
+            const totalTasks = appState.tasks.length;
+            const completedTasks = appState.tasks.filter(t => t.completed).length;
+            const rate = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+            document.getElementById('stats-tasks-completion-rate').innerText = `${rate}%`;
+
+            const ctx = document.getElementById('mainAnalyticsChart').getContext('2d');
+            if (mainChartInstance) mainChartInstance.destroy();
+
+            const dates = Object.keys(appState.studyHistory).slice(-7);
+            const freeHours = appState.settings.freeHours || 8;
+            const studyHours = dates.map(d => ((appState.studyHistory[d].studyMins || 0) / 60).toFixed(1));
+            const wasteHours = dates.map(d => Math.max(0, freeHours - ((appState.studyHistory[d].studyMins || 0) / 60)).toFixed(1));
+
+            mainChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: dates.length > 0 ? dates : ['لا توجد بيانات'],
+                    datasets: [
+                        {
+                            label: 'ساعات المذاكرة الفعلية',
+                            data: studyHours.length > 0 ? studyHours : [0],
+                            backgroundColor: 'rgba(59, 130, 246, 0.85)',
+                            borderRadius: 8
+                        },
+                        {
+                            label: 'ساعات التسويف الأوتوماتيكي',
+                            data: wasteHours.length > 0 ? wasteHours : [0],
+                            backgroundColor: 'rgba(239, 68, 68, 0.85)',
+                            borderRadius: 8
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: '#a1a1aa', font: { family: 'Cairo' } } }
+                    },
+                    scales: {
+                        x: { ticks: { color: '#a1a1aa', font: { family: 'Cairo' } }, grid: { color: '#1f1f23' } },
+                        y: { ticks: { color: '#a1a1aa', font: { family: 'Cairo' } }, grid: { color: '#1f1f23' } }
+                    }
+                }
+            });
+        }
+
+        // --- ARCHIVE VIEW ---
+        function renderArchiveView() {
+            const container = document.getElementById('archive-list-container');
+            const entries = Object.entries(appState.studyHistory);
+
+            if (entries.length === 0) {
+                container.innerHTML = `<div class="text-center py-6 text-zinc-500 text-xs">لا يوجد تاريخ مسجل بعد.</div>`;
+                return;
+            }
+
+            container.innerHTML = entries.map(([date, d]) => `
+                <div class="flex items-center justify-between p-4 bg-zinc-950 border border-cardBorder rounded-2xl">
+                    <div>
+                        <h4 class="font-bold text-white text-sm">${date}</h4>
+                        <p class="text-xs text-zinc-400 mt-0.5">جلسات: ${d.sessions || 0}</p>
+                    </div>
+                    <div class="flex items-center gap-4 text-xs font-extrabold">
+                        <span class="text-accentBlue">${((d.studyMins || 0) / 60).toFixed(1)} ساعةذاكرت</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- SETTINGS ---
+        function renderSettings() {
+            document.getElementById('setting-user-name').value = appState.settings.userName;
+            document.getElementById('setting-exam-title').value = appState.settings.examTitle || 'موعد الامتحان النهائي';
+            document.getElementById('setting-free-hours').value = appState.settings.freeHours || 8;
+            document.getElementById('setting-daily-goal').value = appState.settings.dailyGoalHours;
+            document.getElementById('setting-exam-date').value = appState.settings.examDate;
+        }
+
+        function saveSettings() {
+            appState.settings.userName = document.getElementById('setting-user-name').value;
+            appState.settings.examTitle = document.getElementById('setting-exam-title').value;
+            appState.settings.freeHours = parseFloat(document.getElementById('setting-free-hours').value) || 8;
+            appState.settings.dailyGoalHours = parseInt(document.getElementById('setting-daily-goal').value) || 5;
+            appState.settings.examDate = document.getElementById('setting-exam-date').value;
+            saveState();
+            showToast('تم حفظ الإعدادات بنجاح');
+            renderDashboard();
+        }
+
+        function exportBackupJSON() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(appState));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `Self_Discipline_Backup_${new Date().toISOString().split('T')[0]}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            downloadAnchor.remove();
+            showToast('تم تحميل نسخة البيانات الاحتياطية');
+        }
+
+        function wipeAllData() {
+            if (confirm('هل أنت متأكد تماماً من تصفير كافة بياناتك وسجلاتك؟')) {
+                appState = DEFAULT_STATE;
+                saveState();
+                switchTab('dashboard');
+                showToast('تم تصفير كافة البيانات', true);
+            }
+        }
+
+        function openConfrontationModal() {
+            document.getElementById('modal-quote-text').innerText = CONFRONTATION_QUOTES[Math.floor(Math.random() * CONFRONTATION_QUOTES.length)];
+            document.getElementById('confrontation-modal').classList.remove('hidden');
+            document.getElementById('confrontation-modal').classList.add('flex');
+        }
+        function closeConfrontationModal() {
+            document.getElementById('confrontation-modal').classList.add('hidden');
+            document.getElementById('confrontation-modal').classList.remove('flex');
+        }
+
+        window.onload = function() {
+            switchTab('dashboard');
+        };
+    </script>
+</body>
+</html>
